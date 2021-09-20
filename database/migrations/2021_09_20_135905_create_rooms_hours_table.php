@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateRoomTable extends Migration
+class CreateRoomsHoursTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,14 @@ class CreateRoomTable extends Migration
      */
     public function up()
     {
-        Schema::create('room', function (Blueprint $table) {
+        Schema::create('rooms_hours', function (Blueprint $table) {
             $table->id();
-            $table->string('name',80);
-            $table->string('desc',250)->nullable();
+            $table->integer('room_id');
+            $table->string('hour_start');
+            $table->string('hour_end')->nullable();
+            $table->integer('max_time')->nullable()->comment('In minutes');
             $table->integer('capacity')->nullable();
             $table->boolean('fail_capacity')->default(false)->comment('Tell the software if it has to fail after the max capacity is reached');
-            $table->boolean('default_capacity')->default(true)->comment('If an hour does not have a capacity, this capacity will be the default');
-            $table->string('open_at')->nullable()->comment('When the room opens');
-            $table->string('close_at')->nullable()->comment('When the room close');
             $table->timestamps();
         });
     }
@@ -33,6 +32,6 @@ class CreateRoomTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('room');
+        Schema::dropIfExists('rooms_hours');
     }
 }
