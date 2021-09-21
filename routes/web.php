@@ -16,3 +16,7 @@
 $router->get('/', function () use ($router) {
     return $router->app->version();
 });
+
+$router->put('/room','RoomController@AddRoom');
+$router->patch('/room','RoomController@UpdateRoom');
+$router->delete('/room','RoomController@RemoveRoom');
