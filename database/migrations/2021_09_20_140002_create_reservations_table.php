@@ -17,10 +17,11 @@ class CreateReservationsTable extends Migration
             $table->id();
             $table->integer('room_hour_id')->index('foreign_room_hour');
             $table->integer('user_id')->index('foreign_user');
-            $table->string('hour_start');
-            $table->string('hour_end')->nullable();
+            $table->time('hour_start')->nullable();
+            $table->time('hour_end')->nullable();
             $table->integer('eta')->nullable();
             $table->enum('status',['active','canceled','to_approve']);
+            $table->date('date_reserved');
             $table->timestamps();
         });
     }

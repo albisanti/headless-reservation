@@ -46,6 +46,7 @@ class UserController extends Controller
             'pwd' => 'required'
         ]);
         try {
+            $credentials = $request->only(['email','pwd']);
             if (! $token = auth()->attempt($credentials)) {
                 return response()->json(['error' => 'Unauthorized'], 401);
             }
@@ -63,7 +64,6 @@ class UserController extends Controller
     public function logout()
     {
         auth()->logout();
-
         return response()->json(['message' => 'Successfully logged out']);
     }
 

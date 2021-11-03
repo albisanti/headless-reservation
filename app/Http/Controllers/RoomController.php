@@ -7,7 +7,29 @@ use App\Models\RoomHour;
 
 class RoomController extends Controller
 {
-    public function AddRoom(\Illuminate\Http\Request $request){
+
+    public function getRooms(\Illuminate\Http\Request $request){
+        $rooms = new Room;
+        $rs = $rooms->get();
+        if($rooms) return response()->json(['status' => 'success','rs' => $rs]);
+        return response()->json(['status' => 'error', 'report' => "Nessun risultato trovato"]);
+    }
+
+    public function roomDetail(\Illuminate\Http\Request $request){
+        $this->validate($request,['id' => 'required|integer']);
+        $room = Room::find($request->id);
+        if($room) return response()->json(['status' => 'success', 'rs' => $room]);
+        return response()->json(['status' => 'error','report' => 'Stanza non disponibile.']);
+    }
+
+    public function getRoomHours(\Illuminate\Http\Request $request){
+        $this->validate($request,['id' => 'required|integer']);
+        $roomHour = RoomHour::find($request->id);
+        if($roomHour) return response()->json(['status' => 'success', 'rs' => $roomHour]);
+        return response()->json(['status' => 'error','report' => 'Orari non disponibili.']);
+    }
+
+    public function addRoom(\Illuminate\Http\Request $request){
         $this->validate($request,[
             'name' => 'required',
             'capacity' => 'nullable|numeric',
@@ -23,11 +45,11 @@ class RoomController extends Controller
             'open_at' => $request->open_at,
             'close_at' => $request->close_at
         ]);
-        if($room) return response()->json(['status' => 'success']);
+        if($room) return response()->json(['status' => 'success','id' => $room->id]);
         return response()->json(['status' => 'error', 'report' => "C'è stato un errore nella creazione della stanza. Riprova più tardi o contatta l'assistenza."]);
     }
 
-    public function UpdateRoom(\Illuminate\Http\Request $request){
+    public function updateRoom(\Illuminate\Http\Request $request){
         $this->validate($request,[
             'id' => 'required|integer'
         ]);
@@ -47,7 +69,7 @@ class RoomController extends Controller
 
     }
 
-    public function RemoveRoom(\Illuminate\Http\Request $request){
+    public function removeRoom(\Illuminate\Http\Request $request){
         $this->validate($request,[
             'id' => 'required|integer'
         ]);
@@ -56,7 +78,7 @@ class RoomController extends Controller
         return response()->json(['status' => 'error', 'report' => "C'è stato un errore nella cancellazione della stanza. Riprova più tardi o contatta l'assistenza."]);
     }
 
-    public function AddDayHour(\Illuminate\Http\Request $request){
+    public function addDayHour(\Illuminate\Http\Request $request){
         $this->validate($request,[
            'room_id' => 'required|integer',
            'day' => 'required|integer',
@@ -82,7 +104,7 @@ class RoomController extends Controller
         return response()->json(['status' => 'error', 'report' => "C'è stato un errore nell'aggiunta di un nuovo orario. Riprova più tardi o contatta l'assistenza"]);
     }
 
-    public function UpdateDayHour(\Illuminate\Http\Request $request){
+    public function updateDayHour(\Illuminate\Http\Request $request){
         $this->validate($request,[
             'id' => 'required|integer'
         ]);
@@ -105,7 +127,7 @@ class RoomController extends Controller
         return response()->json(['status' => 'error','report' => "Non è stata trovata la stanza dove applicare la modifica"]);
     }
 
-    public function RemoveDayHour(\Illuminate\Http\Request $request){
+    public function removeDayHour(\Illuminate\Http\Request $request){
         $this->validate($request,[
             'id' => 'required|integer'
         ]);
