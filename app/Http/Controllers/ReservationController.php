@@ -23,15 +23,12 @@ class ReservationController extends Controller
         $reservation->hour_end = $request->hour_end;
         $reservation->eta = $request->eta;
         $reservation->status = 'to_approve';
-        $reservation->date = $request->date;
+        $reservation->date_reserved = $request->date_reserved;
         if($reservation->save()) return response()->json(['status' => 'success']);
         return response()->json(['status' => 'error', 'report' => 'Non è stato possibile salvare la prenotazione. Riprovare più tardi']);
     }
 
     public function getRoomsReservations(\Illuminate\Http\Request $request){
-        $this->validate($request,[
-            'room_id' => 'required|integer'
-        ]);
         $room = Room::find($request->room_id);
         $reservations = $room->reservations()->get();
         if($reservations) return response()->json(['status' => 'success', 'rs' => $reservations]);
@@ -46,9 +43,6 @@ class ReservationController extends Controller
     }
 
     public function getUserReservations(\Illuminate\Http\Request $request){
-        $this->validate($request,[
-            'id' => 'required|integer'
-        ]);
         $user = User::find($request->id);
         $reservations = $user->reservations()->get();
         if($reservations) return response()->json(['status' => 'success', 'rs' => $reservations]);

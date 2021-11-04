@@ -13,7 +13,7 @@ class CreateRoomsHoursTable extends Migration
      */
     public function up()
     {
-        Schema::create('rooms_hours', function (Blueprint $table) {
+        Schema::create('room_hours', function (Blueprint $table) {
             $table->id();
             $table->integer('room_id');
             $table->integer('day');
@@ -37,6 +37,6 @@ class CreateRoomsHoursTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('rooms_hours');
+        Schema::dropIfExists('room_hours');
     }
 }

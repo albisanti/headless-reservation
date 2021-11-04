@@ -41,7 +41,7 @@ $router->group(['middleware' => 'auth'], function() use ($router){
 
     //Reservations
     $router->put('/reservation','ReservationController@addReservation');
-    $router->get('/reservation/room','ReservationController@getRoomsReservations');
+    $router->get('/reservation/room/{room_id}','ReservationController@getRoomsReservations');
     $router->get('/reservation/mine','ReservationController@getMyReservations');
     $router->get('/reservation/user/{id}','ReservationController@getUserReservations');
 

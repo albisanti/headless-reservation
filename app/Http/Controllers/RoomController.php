@@ -23,7 +23,6 @@ class RoomController extends Controller
     }
 
     public function getRoomHours(\Illuminate\Http\Request $request){
-        $this->validate($request,['id' => 'required|integer']);
         $roomHour = RoomHour::find($request->id);
         if($roomHour) return response()->json(['status' => 'success', 'rs' => $roomHour]);
         return response()->json(['status' => 'error','report' => 'Orari non disponibili.']);
@@ -74,7 +73,7 @@ class RoomController extends Controller
             'id' => 'required|integer'
         ]);
         $room = Room::find($request->id);
-        if($room->delete) return response()->json(['status' => 'success']);
+        if($room->delete()) return response()->json(['status' => 'success']);
         return response()->json(['status' => 'error', 'report' => "C'è stato un errore nella cancellazione della stanza. Riprova più tardi o contatta l'assistenza."]);
     }
 
@@ -98,7 +97,7 @@ class RoomController extends Controller
             'fail_capacity' => $request->fail_capacity,
             'bind_hours' => $request->bind_hours,
             'prev_confirmation' => $request->prev_confirmation,
-            'status' => $request->status
+            'status' => $request->status ?? 'pend_creation'
         ]);
         if($roomHour) return response()->json(['status' => 'success']);
         return response()->json(['status' => 'error', 'report' => "C'è stato un errore nell'aggiunta di un nuovo orario. Riprova più tardi o contatta l'assistenza"]);
@@ -109,6 +108,7 @@ class RoomController extends Controller
             'id' => 'required|integer'
         ]);
         $roomHour = RoomHour::find($request->id);
+
         if($roomHour){
             $roomHour->room_id = $request->room_id ?? $roomHour->room_id;
             $roomHour->day = $request->day ?? $roomHour->day;
@@ -120,7 +120,7 @@ class RoomController extends Controller
             $roomHour->bind_hours = $request->bind_hours ?? $roomHour->bind_hours;
             $roomHour->prev_confirmation = $request->prev_confirmation ?? $roomHour->prev_confirmation;
             $roomHour->status = $request->status ?? $roomHour->status;
-            if($roomHour->save()) return response()->json(['status' => 'success']);
+            if($roomHour->save()) return response()->json(['status' => 'success','id' => $roomHour->id]);
             return response()->json(['status' => 'error', 'report' => "C'è stato un errore nella modifica di un orario. Riprova più tardi o contatta l'assistenza"]);
 
         }

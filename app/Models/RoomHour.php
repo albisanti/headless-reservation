@@ -8,4 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class RoomHour extends Model
 {
     use HasFactory;
+
+    protected $table = "room_hours";
+    protected $guarded = [];
 }
