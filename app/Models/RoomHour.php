@@ -11,4 +11,8 @@ class RoomHour extends Model
 
     protected $table = "room_hours";
     protected $guarded = [];
+
+    public function reservations(){
+        return $this->hasMany(Reservation::class);
+    }
 }

@@ -12,7 +12,11 @@ class Room extends Model
     protected $guarded = [];
 
     public function reservations(){
-        return $this->hasMany('Reservation');
+        return $this->hasMany(Room::class);
+    }
+
+    public function availabilities(){
+        return $this->hasMany(RoomHour::class);
     }
 
 }

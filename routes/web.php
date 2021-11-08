@@ -40,6 +40,7 @@ $router->group(['middleware' => 'auth'], function() use ($router){
     $router->delete('/room/hour','RoomController@removeDayHour');
 
     //Reservations
+    $router->get('reservations','ReservationController@getAllReservations');
     $router->put('/reservation','ReservationController@addReservation');
     $router->get('/reservation/room/{room_id}','ReservationController@getRoomsReservations');
     $router->get('/reservation/mine','ReservationController@getMyReservations');

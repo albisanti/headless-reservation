@@ -23,7 +23,7 @@ class ReservationFactory extends Factory
     {
         return [
             'room_hour_id' => 1,
-            'user_id' => 1,
+            'user_id' => 2,
             'hour_start' => str_pad($this->faker->numberBetween(0,23),1,'0').':'.str_pad($this->faker->numberBetween(0,60),1,'0').':00',
             'hour_end' => str_pad($this->faker->numberBetween(0,23),1,'0').':'.str_pad($this->faker->numberBetween(0,60),1,'0').':00',
             'eta' => $this->faker->randomDigit(),

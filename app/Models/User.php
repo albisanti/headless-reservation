@@ -55,7 +55,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     ];
 
     public function reservations(){
-        $this->hasMany(Reservation::class);
+        return $this->hasMany(Reservation::class);
     }
 
 }

@@ -4,8 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Reservation;
 use App\Models\Room;
+use App\Models\RoomHour;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Mockery\Exception;
 
 class ReservationController extends Controller
 {
@@ -28,18 +31,38 @@ class ReservationController extends Controller
         return response()->json(['status' => 'error', 'report' => 'Non è stato possibile salvare la prenotazione. Riprovare più tardi']);
     }
 
+    public function getAllReservations(\Illuminate\Http\Request $request){
+        $reservations = DB::table('reservations');
+        if(!empty($request->date)) {
+            $reservations->where('date_reserved', '=', $request->date);
+        } else {
+            $reservations->where('date_reserved', '>', date('Y-m-d'));
+        }
+        $rs = $reservations->get();
+        if($rs) return response()->json(['status' => 'success','rs' => $rs]);
+        return response()->json(['status' => 'error', 'report' => 'Non è stata trovata nessuna prenotazione']);
+    }
+
     public function getRoomsReservations(\Illuminate\Http\Request $request){
-        $room = Room::find($request->room_id);
-        $reservations = $room->reservations()->get();
+        $roomHours = RoomHour::where('room_id',$request->room_id)->get();
+        $reservations = [];
+        foreach ($roomHours as $roomHour) {
+            $rs = $roomHour->reservations()->get();
+            if($rs) $reservations[$roomHour->hour_start] = $rs;
+        }
         if($reservations) return response()->json(['status' => 'success', 'rs' => $reservations]);
         return response()->json(['status' => 'error','report' => 'Nessuna prenotazione trovata per la stanza']);
     }
 
     public function getMyReservations(\Illuminate\Http\Request $request){
         $user = User::find(Auth::id());
-        $reservations = $user->reservations()->get();
-        if($reservations) return response()->json(['status' => 'success', 'rs' => $reservations]);
-        return response()->json(['status' => 'error','report' => 'Nessuna prenotazione trovata per l\'utente.']);
+        try {
+            $reservations = $user->reservations()->get();
+            if ($reservations) return response()->json(['status' => 'success', 'rs' => $reservations]);
+            return response()->json(['status' => 'error', 'report' => 'Nessuna prenotazione trovata per l\'utente.']);
+        } catch (Exception $e){
+            return response()->json(['status' => 'error', 'report' => 'Nessuna prenotazione trovata per l\'utente. Se pensi che questo sia un errore, contatta l\'assistenza.']);
+        }
     }
 
     public function getUserReservations(\Illuminate\Http\Request $request){
