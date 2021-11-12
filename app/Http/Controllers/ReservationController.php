@@ -72,4 +72,25 @@ class ReservationController extends Controller
         return response()->json(['status' => 'error','report' => 'Nessuna prenotazione trovata per l\'utente.']);
     }
 
+    public function confirmReservation(\Illuminate\Http\Request $request){
+        if($request->status !== 'confirm' && $request->status !== 'refuse') return response()->json(["status" => "error", "report" => "Azione non disponibile"],400);
+
+        $reservation = Reservation::find($request->id);
+        if($reservation){
+            $reservation->status = $request->status === "confirm" ? "active" : "canceled";
+            if($reservation->save()) return response()->json(['status' => 'success']);
+            return response()->json(['status' => 'error', "report" => "Non è stato possibile accettare la prenotazione. Si prega di riprovare più tardi"]);
+        }
+        return response()->json(['status' => 'error', 'report' => "La prenotazione ricercata non è disponibile per l'accettazione"]);
+    }
+
+    public function deleteReservation(\Illuminate\Http\Request $request){
+        $reservation = Reservation::find($request->id);
+        if($reservation){
+            $reservation->delete();
+            return response()->json(["status" => "success"]);
+        }
+        return response()->json(["status" => "error", "report" => "Prenotazione non trovata"]);
+    }
+
 }

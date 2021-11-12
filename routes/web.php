@@ -45,5 +45,6 @@ $router->group(['middleware' => 'auth'], function() use ($router){
     $router->get('/reservation/room/{room_id}','ReservationController@getRoomsReservations');
     $router->get('/reservation/mine','ReservationController@getMyReservations');
     $router->get('/reservation/user/{id}','ReservationController@getUserReservations');
-
+    $router->delete('reservation/{id}','ReservationController@deleteReservation');
+    $router->patch('/reservation/{status}/{id}','ReservationController@confirmReservation'); //Reservation confirm & refuse
 });

@@ -65,8 +65,6 @@ class ReservationTest extends TestCase
         $this->actingAs(User::find(1));
         $this->patch('/reservation/confirm/'.$ids['reservation'])->seeJson(['status' => 'success']);
         $this->patch('/reservation/refuse/'.$ids['reservation'])->seeJson(['status' => 'success']);
-        $this->actingAs(User::find(2));
-        $this->patch('/reservation/confirm/'.$ids['reservation'])->seeJson(['status' => 'error']);
     }
 
     /**
